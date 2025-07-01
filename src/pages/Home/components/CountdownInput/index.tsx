@@ -5,7 +5,7 @@ import { CyclesContext } from '../../../../contexts/CyclesContext'
 
 export const CountdownInput = () => {
   const { register, getValues } = useFormContext()
-  const { cycleState } = useContext(CyclesContext)
+  const { cycleState, cycles } = useContext(CyclesContext)
 
   const isCycleRunning = !!cycleState.activeCycle
   return (
@@ -17,15 +17,19 @@ export const CountdownInput = () => {
         placeholder="Name your task"
         list="taskSuggestions"
         readOnly={isCycleRunning}
+        autoComplete='off'
         {...register('task')}
       />
 
-      <datalist id="taskSuggestions">
-        <option value="Projeto 1" />
-        <option value="Projeto 2" />
-        <option value="Projeto 3" />
-        <option value="Banana" />
-      </datalist>
+      {
+        cycles.length
+        ? <datalist id="taskSuggestions">
+          {cycles.map(cyc => {
+            return <option value={cyc.task}></option>
+          })}
+        </datalist>
+        : ''
+      }
 
       <label htmlFor="inputMinutesAmount">during</label>
       <MinutesAmountInput
